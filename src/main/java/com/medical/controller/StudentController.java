@@ -30,6 +30,7 @@ public class StudentController {
 		return (CsrfToken) request.getAttribute("_csrf");
 	}
 	
+    
 
     @PostMapping("/api/students")
     public Student createStudent(@RequestBody Student student) {
