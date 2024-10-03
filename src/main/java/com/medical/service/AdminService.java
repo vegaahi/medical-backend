@@ -47,6 +47,10 @@ public class AdminService {
 	                }).orElse(false);
 	    }
 
+	    public Optional<Admin> findByUsername(String username) {
+	        return adminRepository.findByUsername(username);
+	    }
+
 		
 		
 }
