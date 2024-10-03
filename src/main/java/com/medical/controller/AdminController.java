@@ -57,4 +57,6 @@ public class AdminController {
         boolean isDeleted = adminService.deleteAdmin(id);
         return isDeleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    
+    
 }
