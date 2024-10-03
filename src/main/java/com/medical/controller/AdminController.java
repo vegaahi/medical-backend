@@ -11,6 +11,7 @@ import com.medical.entity.Admin;
 import com.medical.service.AdminService;
 
 @RestController
+
 @RequestMapping("/admins")
 public class AdminController {
 
@@ -30,8 +31,15 @@ public class AdminController {
                 .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    @GetMapping("/getbyusername/{username}")
+    public ResponseEntity<Admin> getAdminByUsername(@PathVariable String username) {
+        return adminService.findByUsername(username)
+                .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
-    @PostMapping
+
+    @PostMapping("/{id}")
     public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin) {
         Admin savedAdmin = adminService.createAdmin(admin);
         return new ResponseEntity<>(savedAdmin, HttpStatus.CREATED);
