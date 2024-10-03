@@ -6,6 +6,7 @@ package com.medical.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.medical.entity.Chapter;
 import com.medical.entity.SubChapter;
 import com.medical.repository.SubChapterRepository;
 
@@ -41,4 +42,10 @@ public class SubChapterService {
     public SubChapter getSubChapterById(Long id) {
         return subChapterRepository.findById(id).orElseThrow(() -> new RuntimeException("SubChapter not found"));
     }
+
+    public SubChapter getSubChapterByChapterAndSubchapterNumber(Chapter chapter, Integer subchapterNumber) {
+        return subChapterRepository.findByChapterAndSubchapterNumber(chapter, subchapterNumber)
+                .orElseThrow(() -> new RuntimeException("SubChapter not found for given chapter and subchapter number"));
+    }
+
 }

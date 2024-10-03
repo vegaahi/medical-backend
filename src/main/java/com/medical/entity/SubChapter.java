@@ -11,7 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "sub_chapter")
+@Table(
+	    name = "sub_chapter",
+	    uniqueConstraints = {
+	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number"})
+	    }
+	) 
 public class SubChapter { 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
