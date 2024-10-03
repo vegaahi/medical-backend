@@ -24,8 +24,10 @@ public class Chapter {
 @Id 
 @GeneratedValue(strategy = GenerationType.IDENTITY) 
 private Long id; 
+
 @Column(name = "chapter_number", nullable = false) 
 private Integer chapterNumber; 
+
 @Column(name = "title", nullable = false) 
 private String title; 
  
