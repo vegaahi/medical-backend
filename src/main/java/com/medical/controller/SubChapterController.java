@@ -50,36 +50,6 @@ public class SubChapterController {
 
         return ResponseEntity.ok("SubChapter created successfully");
     }
-<<<<<<< HEAD
-    
-    
-    // Add a new subchapter
-    @PostMapping("/image/{sid}")
-    public ResponseEntity<SubChapter> addSubChapterByImage(@RequestBody SubChapter subChapter) {
-        SubChapter savedSubChapter = subChapterService.saveSubChapter(subChapter);
-        return ResponseEntity.ok(savedSubChapter);
-    }
-
-    // Update an existing subchapter
-    @PutMapping("/{sid}")
-    public ResponseEntity<String> updateSubChapter(@PathVariable Long subChapterId, @RequestBody SubChapter subChapterDetails) {
-        SubChapter existingSubChapter = subChapterService.getSubChapterById(subChapterId);
-        
-        if (existingSubChapter == null) {
-            return ResponseEntity.notFound().build(); // Handle case where subchapter doesn't exist
-        }
-
-        // Update the fields of the existing subchapter with the new data
-        existingSubChapter.setChapter(subChapterDetails.getChapter());
-        existingSubChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
-        existingSubChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
-        // Update any other fields that are necessary
-
-        // Save the updated subchapter
-        subChapterService.saveSubChapter(existingSubChapter);
-
-        return ResponseEntity.ok("SubChapter updated successfully");
-=======
 
     // Add a new subchapter with image
     @PostMapping("/image")
@@ -122,6 +92,31 @@ public class SubChapterController {
         }
     }
 
+    // Update an existing subchapter (Text)
+    @PutMapping("/{subChapterId}")
+    public ResponseEntity<String> updateSubChapter(
+            @PathVariable Long subChapterId, 
+            @RequestBody SubChapter subChapterDetails) {
+        
+        SubChapter existingSubChapter = subChapterService.getSubChapterById(subChapterId);
+        
+        if (existingSubChapter == null) {
+            return ResponseEntity.notFound().build(); // Handle case where subchapter doesn't exist
+        }
+
+        // Update the fields of the existing subchapter with the new data
+        existingSubChapter.setChapter(subChapterDetails.getChapter());
+        existingSubChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
+        existingSubChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
+        // Update any other fields that are necessary
+
+        // Save the updated subchapter
+        subChapterService.saveSubChapter(existingSubChapter);
+
+        return ResponseEntity.ok("SubChapter updated successfully");
+    }
+
+    // Update subchapter image
     @PutMapping("/image/update/{chapterId}/{subchapterNumber}")
     public ResponseEntity<String> updateSubChapterImage(
             @PathVariable Long chapterId,
@@ -168,9 +163,7 @@ public class SubChapterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error while updating image: " + e.getMessage());
         }
->>>>>>> origin/adminchanges
     }
-
 
     // Get all subchapters (optional, for convenience)
     @GetMapping
