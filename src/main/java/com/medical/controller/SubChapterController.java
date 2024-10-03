@@ -55,6 +55,7 @@ public class SubChapterController {
         return ResponseEntity.ok("SubChapter created successfully");
     }
     
+    
     // Add a new subchapter
     @PostMapping("/image/{sid}")
     public ResponseEntity<SubChapter> addSubChapterByImage(@RequestBody SubChapter subChapter) {
@@ -62,11 +63,25 @@ public class SubChapterController {
         return ResponseEntity.ok(savedSubChapter);
     }
 
-    // Edit an existing subchapter
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<SubChapter> editSubChapter(@PathVariable Long id, @RequestBody SubChapter updatedSubChapter) {
-        SubChapter editedSubChapter = subChapterService.updateSubChapter(id, updatedSubChapter);
-        return ResponseEntity.ok(editedSubChapter);
+    // Update an existing subchapter
+    @PutMapping("/{sid}")
+    public ResponseEntity<String> updateSubChapter(@PathVariable Long subChapterId, @RequestBody SubChapter subChapterDetails) {
+        SubChapter existingSubChapter = subChapterService.getSubChapterById(subChapterId);
+        
+        if (existingSubChapter == null) {
+            return ResponseEntity.notFound().build(); // Handle case where subchapter doesn't exist
+        }
+
+        // Update the fields of the existing subchapter with the new data
+        existingSubChapter.setChapter(subChapterDetails.getChapter());
+        existingSubChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
+        existingSubChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
+        // Update any other fields that are necessary
+
+        // Save the updated subchapter
+        subChapterService.saveSubChapter(existingSubChapter);
+
+        return ResponseEntity.ok("SubChapter updated successfully");
     }
 
     // Get all subchapters (optional, for convenience)

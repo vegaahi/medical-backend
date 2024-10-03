@@ -24,6 +24,9 @@ public class SubChapter {
     @Column(name = "subchapter_number", nullable = false) 
     private Integer subchapterNumber; 
     
+    @Column(name = "subchapter_title", nullable = false) 
+    private String subchapterTitle; 
+    
     @Enumerated(EnumType.STRING) 
     @Column(name = "content_type", nullable = false) 
     private ContentType contentType;  // Enum for 'text' or 'image' 
