@@ -11,7 +11,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "sub_chapter")
+@Table(
+	    name = "sub_chapter",
+	    uniqueConstraints = {
+	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number"})
+	    }
+	) 
 public class SubChapter { 
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
@@ -23,6 +28,9 @@ public class SubChapter {
     
     @Column(name = "subchapter_number", nullable = false) 
     private Integer subchapterNumber; 
+    
+    @Column(name = "subchapter_title", nullable = false) 
+    private String subchapterTitle; 
     
     @Enumerated(EnumType.STRING) 
     @Column(name = "content_type", nullable = false) 
