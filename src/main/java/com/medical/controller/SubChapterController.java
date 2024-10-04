@@ -93,25 +93,35 @@ public class SubChapterController {
     }
 
     // Update an existing subchapter (Text)
-    @PutMapping("/{subChapterId}")
+    @PutMapping("/{cid}/{subChapterId}")
     public ResponseEntity<String> updateSubChapter(
-            @PathVariable Long subChapterId, 
-            @RequestBody SubChapter subChapterDetails) {
-        
-        SubChapter existingSubChapter = subChapterService.getSubChapterById(subChapterId);
-        
-        if (existingSubChapter == null) {
-            return ResponseEntity.notFound().build(); // Handle case where subchapter doesn't exist
-        }
+            @PathVariable Long cid,
+            @PathVariable Integer subChapterId, 
 
+            @RequestBody SubChapter subChapterDetails) {
+    System.out.println(cid+" "+subChapterId);
+        
+    	 Chapter chapter = chapterRepository.findById(cid)
+                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + cid));
+         
+// Set the chapter reference
+
+    	 // Fetch the subchapter by chapter and subchapter number
+         SubChapter subChapter = subChapterService.getSubChapterByChapterAndSubchapterNumber(chapter, subChapterId);
+         if (subChapter == null) {
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for chapter: " + cid + " and subchapter: " + subChapterId);
+         }
+//        SubChapter existingSubChapter = subChapterService.getSubChapterById(subChapterId);
+        
+       
         // Update the fields of the existing subchapter with the new data
-        existingSubChapter.setChapter(subChapterDetails.getChapter());
-        existingSubChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
-        existingSubChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
+        // subChapter.setChapter(subChapterDetails.getChapter());
+         subChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
+        // subChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
         // Update any other fields that are necessary
 
         // Save the updated subchapter
-        subChapterService.saveSubChapter(existingSubChapter);
+        subChapterService.saveSubChapter(subChapter);
 
         return ResponseEntity.ok("SubChapter updated successfully");
     }
