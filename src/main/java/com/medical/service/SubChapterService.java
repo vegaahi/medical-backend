@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.medical.entity.Chapter;
+import com.medical.entity.ContentType;
 import com.medical.entity.SubChapter;
 import com.medical.repository.SubChapterRepository;
 
@@ -47,5 +48,14 @@ public class SubChapterService {
         return subChapterRepository.findByChapterAndSubchapterNumber(chapter, subchapterNumber)
                 .orElseThrow(() -> new RuntimeException("SubChapter not found for given chapter and subchapter number"));
     }
+
+	public int countImagesForSubChapter(Long chapterId, Integer subchapterNumber) {
+		  return subChapterRepository.countImagesForSubChapter(chapterId, subchapterNumber, ContentType.IMAGE);
+	}
+
+
+	 public Optional<SubChapter> findSubChapterByContent(String content) {
+	        return subChapterRepository.findSubChapterByContentStartingWith(content);
+	    }
 
 }
