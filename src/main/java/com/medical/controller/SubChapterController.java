@@ -39,7 +39,7 @@ public class SubChapterController {
     // Add a new subchapter (Text)
     @PostMapping("/text")
     public ResponseEntity<String> createSubChapter(@RequestBody SubChapter subChapter, @RequestParam Long chapterId) {
-        Chapter chapter = chapterRepository.findById(chapterId)
+    	Chapter chapter = chapterRepository.findByChapterNumber(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
         
         // Set the chapter reference in the subchapter
@@ -60,7 +60,7 @@ public class SubChapterController {
             @RequestParam("file") MultipartFile file) {
 
         // Ensure the chapter exists
-        Chapter chapter = chapterRepository.findById(chapterId)
+        Chapter chapter = chapterRepository.findByChapterNumber(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
 
         // Validate content type
@@ -113,7 +113,7 @@ public class SubChapterController {
             @RequestBody SubChapter subChapterDetails) {
     System.out.println(cid+" "+subChapterId);
         
-    	 Chapter chapter = chapterRepository.findById(cid)
+    	 Chapter chapter = chapterRepository.findByChapterNumber(cid)
                  .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + cid));
          
 // Set the chapter reference
@@ -149,7 +149,7 @@ public class SubChapterController {
 
     	String existingImageName = "Image_"+chapterId+"_"+subchapterNumber+"_"+imageNumber;
         // Ensure the chapter exists
-        Chapter chapter = chapterRepository.findById(chapterId)
+        Chapter chapter = chapterRepository.findByChapterNumber(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
 
     
@@ -194,12 +194,7 @@ public class SubChapterController {
 
     
     
-    // Get all subchapters (optional, for convenience)
-//    @GetMapping("/{chapterNumber}")
-//    public ResponseEntity<List<SubChapter>> getAllSubChapters() {
-//        List<SubChapter> subChapters = subChapterService.getAllSubChapters();
-//        return ResponseEntity.ok(subChapters);
-//    }
+
 
     // Get a single subchapter by ID (optional)
     @GetMapping("/{id}")

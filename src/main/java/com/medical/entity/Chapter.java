@@ -37,5 +37,11 @@ private String title;
 @JsonManagedReference  // Indicates this is the forward part of the reference
 private List<SubChapter> subChapters;
 
+public Chapter orElseThrow(Object object) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+
 // Getters and Setters 
 }
