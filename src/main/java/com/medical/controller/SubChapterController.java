@@ -51,7 +51,6 @@ public class SubChapterController {
         return ResponseEntity.ok("SubChapter created successfully");
     }
 
-    // Add a new subchapter with image
     @PostMapping("/image")
     public ResponseEntity<String> uploadSubChapterWithImage(
             @RequestParam("chapterId") Long chapterId,
@@ -67,15 +66,27 @@ public class SubChapterController {
         // Validate content type
         if (contentType == ContentType.IMAGE) {
             try {
-                // Save the file in the upload directory
-                String fileName = file.getOriginalFilename();
-                Path filePath = Paths.get(uploadDir + File.separator + fileName);
+                // Extract file extension
+                String originalFileName = file.getOriginalFilename();
+                String extension = "";
+                if (originalFileName != null && originalFileName.contains(".")) {
+                    extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                }
+
+                // Count existing images for this chapter and subchapter
+                int imageCount = subChapterService.countImagesForSubChapter(chapterId, subchapterNumber) + 1;
+
+                // Construct new file name as Image_{chapterNumber}_{subchapterNumber}_{imageCount}.{extension}
+                String newFileName = "Image_" + chapter.getChapterNumber() + "_" + subchapterNumber + "_" + imageCount + extension;
+
+                // Save the file in the upload directory with the new file name
+                Path filePath = Paths.get(uploadDir + File.separator + newFileName);
                 Files.write(filePath, file.getBytes());
 
-                // Create a SubChapter and save the file name in the "content" field
+                // Create a SubChapter and save the new file name in the "content" field
                 SubChapter subChapter = new SubChapter();
                 subChapter.setSubchapterNumber(subchapterNumber);
-                subChapter.setContent(fileName); // Saving image title (file name)
+                subChapter.setContent(newFileName); // Saving the new file name
                 subChapter.setContentType(contentType);
                 subChapter.setSubchapterTitle(subchapterTitle);
                 subChapter.setChapter(chapter); // Set the chapter reference
@@ -91,6 +102,7 @@ public class SubChapterController {
             return ResponseEntity.badRequest().body("ContentType must be IMAGE for file upload.");
         }
     }
+
 
     // Update an existing subchapter (Text)
     @PutMapping("/{cid}/{subChapterId}")
@@ -126,61 +138,68 @@ public class SubChapterController {
         return ResponseEntity.ok("SubChapter updated successfully");
     }
 
-    // Update subchapter image
-    @PutMapping("/image/update/{chapterId}/{subchapterNumber}")
-    public ResponseEntity<String> updateSubChapterImage(
-            @PathVariable Long chapterId,
-            @PathVariable Integer subchapterNumber,
+
+    @PutMapping("/image/{chapterId}/{subchapterNumber}/{imageNumber}")
+    public ResponseEntity<String> updateSubChapterWithImage(
+            @PathVariable("chapterId") Long chapterId,
+            @PathVariable("subchapterNumber") Integer subchapterNumber,
+            @PathVariable("imageNumber") String imageNumber, // Path variable for the image name
+
             @RequestParam("file") MultipartFile file) {
 
-        // Fetch the chapter by ID
+    	String existingImageName = "Image_"+chapterId+"_"+subchapterNumber+"_"+imageNumber;
+        // Ensure the chapter exists
         Chapter chapter = chapterRepository.findById(chapterId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Chapter not found with id: " + chapterId));
+                .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
 
-        // Fetch the subchapter by chapter and subchapter number
-        SubChapter subChapter = subChapterService.getSubChapterByChapterAndSubchapterNumber(chapter, subchapterNumber);
-        if (subChapter == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for chapter: " + chapterId + " and subchapter: " + subchapterNumber);
-        }
+    
+            try {
+                // Check if the image exists and update the image
+                SubChapter existingSubChapter = subChapterService.findSubChapterByContent(existingImageName)
+                        .orElseThrow(() -> new RuntimeException("Image with name " + existingImageName + " not found"));
 
-        // Validate file content type to ensure it's an image
-        if (!file.getContentType().startsWith("image/")) {
-            return ResponseEntity.badRequest().body("The uploaded file must be an image.");
-        }
+                // Extract file extension
+                String originalFileName = file.getOriginalFilename();
+                String extension = "";
+                if (originalFileName != null && originalFileName.contains(".")) {
+                    extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                }
 
-        try {
-            // Delete the old image file (optional)
-            String oldImage = subChapter.getContent();
-            if (oldImage != null) {
-                Path oldImagePath = Paths.get(uploadDir + File.separator + oldImage);
-                Files.deleteIfExists(oldImagePath);
+                // Delete the old image file (optional)
+                Path existingFilePath = Paths.get(uploadDir + File.separator + existingImageName);
+                Files.deleteIfExists(existingFilePath);
+
+                // Generate new file name, keeping the same naming pattern
+                String newFileName = "Image_" + chapter.getChapterNumber() + "_" + subchapterNumber + "_" 
+                                     + imageNumber + extension;
+
+                // Save the new file in the upload directory
+                Path filePath = Paths.get(uploadDir + File.separator + newFileName);
+                Files.write(filePath, file.getBytes());
+
+                // Update SubChapter content with new image file name
+                existingSubChapter.setContent(newFileName);
+//                existingSubChapter.setSubchapterTitle(subchapterTitle); // Update title if necessary
+           
+
+                // Save the updated SubChapter
+                subChapterService.saveSubChapter(existingSubChapter);
+
+                return ResponseEntity.ok("Image updated successfully.");
+            } catch (IOException e) {
+                return ResponseEntity.status(500).body("Error while saving image.");
             }
+        } 
+    
 
-            // Save the new image in the upload directory
-            String newFileName = file.getOriginalFilename();
-            Path newFilePath = Paths.get(uploadDir + File.separator + newFileName);
-            Files.write(newFilePath, file.getBytes());
-
-            // Update subchapter with the new image filename
-            subChapter.setContent(newFileName); // Save new image filename in content field
-            subChapter.setContentType(ContentType.IMAGE);
-
-            // Save the updated subchapter
-            subChapterService.saveSubChapter(subChapter);
-
-            return ResponseEntity.ok("SubChapter image updated successfully.");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error while updating image: " + e.getMessage());
-        }
-    }
-
+    
+    
     // Get all subchapters (optional, for convenience)
-    @GetMapping
-    public ResponseEntity<List<SubChapter>> getAllSubChapters() {
-        List<SubChapter> subChapters = subChapterService.getAllSubChapters();
-        return ResponseEntity.ok(subChapters);
-    }
+//    @GetMapping("/{chapterNumber}")
+//    public ResponseEntity<List<SubChapter>> getAllSubChapters() {
+//        List<SubChapter> subChapters = subChapterService.getAllSubChapters();
+//        return ResponseEntity.ok(subChapters);
+//    }
 
     // Get a single subchapter by ID (optional)
     @GetMapping("/{id}")

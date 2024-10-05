@@ -58,7 +58,7 @@ public class ChapterController {
  // Get a chapter by ID
     @GetMapping("/{cid}")
     public ResponseEntity<Chapter> getChapterById(@PathVariable("cid") Long cid) {
-        Chapter chapter = chapterService.getChapterById(cid);
+        Chapter chapter = chapterService.getChapterByChapterNumber(cid);
         
         if (chapter == null) {
             return ResponseEntity.notFound().build(); // Handle case where chapter doesn't exist
@@ -66,9 +66,7 @@ public class ChapterController {
         
         return ResponseEntity.ok(chapter); // Return the found chapter
     }
-
-
-
+   
    
 }
 

@@ -2,6 +2,8 @@ package com.medical.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,9 +32,10 @@ private Integer chapterNumber;
 
 @Column(name = "title", nullable = false) 
 private String title; 
- 
-@OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, 
-orphanRemoval = true) 
-private List<SubChapter> subChapters; 
+
+@OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, orphanRemoval = true)
+@JsonManagedReference  // Indicates this is the forward part of the reference
+private List<SubChapter> subChapters;
+
 // Getters and Setters 
 }

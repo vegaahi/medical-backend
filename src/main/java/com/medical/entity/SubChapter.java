@@ -1,5 +1,7 @@
 package com.medical.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +16,7 @@ import lombok.Setter;
 @Table(
 	    name = "sub_chapter",
 	    uniqueConstraints = {
-	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number"})
+	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number","content"})
 	    }
 	) 
 public class SubChapter { 
@@ -23,7 +25,8 @@ public class SubChapter {
     private Long id; 
     
     @ManyToOne 
-    @JoinColumn(name = "chapter_number", nullable = false)  // Maps to chapterNumber in Chapter
+    @JoinColumn(name = "chapter_number", nullable = false) 
+    @JsonBackReference// Maps to chapterNumber in Chapter
     private Chapter chapter; 
     
     @Column(name = "subchapter_number", nullable = false) 
