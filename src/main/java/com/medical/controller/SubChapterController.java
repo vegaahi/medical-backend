@@ -38,9 +38,9 @@ public class SubChapterController {
 
     // Add a new subchapter (Text)
     @PostMapping("/text")
-    public ResponseEntity<String> createSubChapter(@RequestBody SubChapter subChapter, @RequestParam Long chapterId) {
-    	Chapter chapter = chapterRepository.findByChapterNumber(chapterId)
-                .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
+    public ResponseEntity<String> createSubChapter(@RequestBody SubChapter subChapter, @RequestParam Long chapterNumber) {
+    	Chapter chapter = chapterRepository.findByChapterNumber(chapterNumber)
+                .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterNumber));
         
         // Set the chapter reference in the subchapter
         subChapter.setChapter(chapter);
