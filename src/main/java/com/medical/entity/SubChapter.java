@@ -16,7 +16,7 @@ import lombok.Setter;
 @Table(
 	    name = "sub_chapter",
 	    uniqueConstraints = {
-	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number","content"})
+	        @UniqueConstraint(columnNames = {"chapter_number", "subchapter_number","subchapterTitle"})
 	    }
 	) 
 public class SubChapter { 

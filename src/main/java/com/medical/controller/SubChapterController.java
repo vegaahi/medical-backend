@@ -105,11 +105,11 @@ public class SubChapterController {
 
 
     // Update an existing subchapter (Text)
-    @PutMapping("/{cid}/{subChapterId}")
+    @PutMapping("{contentType}/{cid}/{subChapterId}")
     public ResponseEntity<String> updateSubChapter(
             @PathVariable Long cid,
             @PathVariable Integer subChapterId, 
-
+            @PathVariable ContentType contentType,
             @RequestBody SubChapter subChapterDetails) {
     System.out.println(cid+" "+subChapterId);
         
@@ -119,7 +119,7 @@ public class SubChapterController {
 // Set the chapter reference
 
     	 // Fetch the subchapter by chapter and subchapter number
-         SubChapter subChapter = subChapterService.getSubChapterByChapterAndSubchapterNumber(chapter, subChapterId);
+         SubChapter subChapter = subChapterService.getSubChapterByChapterAndSubchapterNumberAndContentType(chapter, subChapterId,contentType);
          if (subChapter == null) {
              throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for chapter: " + cid + " and subchapter: " + subChapterId);
          }
@@ -129,6 +129,7 @@ public class SubChapterController {
         // Update the fields of the existing subchapter with the new data
         // subChapter.setChapter(subChapterDetails.getChapter());
          subChapter.setSubchapterTitle(subChapterDetails.getSubchapterTitle());
+         subChapter.setContent(subChapterDetails.getContent());
         // subChapter.setSubchapterNumber(subChapterDetails.getSubchapterNumber());
         // Update any other fields that are necessary
 
@@ -136,6 +137,25 @@ public class SubChapterController {
         subChapterService.saveSubChapter(subChapter);
 
         return ResponseEntity.ok("SubChapter updated successfully");
+    }
+    
+    
+    @GetMapping("{contentType}/{cid}/{subChapterId}")
+    public SubChapter getSubChaoterByContentTypeText(
+    		@PathVariable Long cid,
+            @PathVariable Integer subChapterId, 
+            @PathVariable ContentType contentType
+    		
+    		){
+    	
+    	 Chapter chapter = chapterRepository.findByChapterNumber(cid)
+                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + cid));
+    	
+    	 SubChapter subChapter = subChapterService.getSubChapterByChapterAndSubchapterNumberAndContentType(chapter, subChapterId,contentType);
+         if (subChapter == null) {
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for chapter: " + cid + " and subchapter: " + subChapterId);
+         }
+         return subChapter;
     }
 
 

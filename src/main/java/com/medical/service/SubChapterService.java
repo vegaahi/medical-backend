@@ -44,8 +44,8 @@ public class SubChapterService {
         return subChapterRepository.findById(id).orElseThrow(() -> new RuntimeException("SubChapter not found"));
     }
 
-    public SubChapter getSubChapterByChapterAndSubchapterNumber(Chapter chapter, Integer subchapterNumber) {
-        return subChapterRepository.findByChapterAndSubchapterNumber(chapter, subchapterNumber)
+    public SubChapter getSubChapterByChapterAndSubchapterNumberAndContentType(Chapter chapter, Integer subchapterNumber, ContentType contentType) {
+        return subChapterRepository.findByChapterAndSubchapterNumberAndContentType(chapter, subchapterNumber,contentType)
                 .orElseThrow(() -> new RuntimeException("SubChapter not found for given chapter and subchapter number"));
     }
 
