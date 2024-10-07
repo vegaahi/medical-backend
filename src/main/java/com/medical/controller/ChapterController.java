@@ -12,61 +12,63 @@ import com.medical.entity.Admin;
 import com.medical.entity.Chapter;
 import com.medical.service.AdminService;
 import com.medical.service.ChapterService;
-
 @RestController
-
 @RequestMapping("/admins/chapter/")
 public class ChapterController {
 
-	
-	@Autowired
+    @Autowired
     private ChapterService chapterService;
 
     // Add a new chapter
     @PostMapping("/{cid}")
-    public ResponseEntity<Chapter> addChapter(@RequestBody Chapter chapter) {
-        Chapter savedChapter = chapterService.saveChapter(chapter);
-        return ResponseEntity.ok(savedChapter);
+    public ResponseEntity<?> addChapter(@RequestBody Chapter chapter) {
+        try {
+            Chapter savedChapter = chapterService.saveChapter(chapter);
+            return ResponseEntity.ok(savedChapter);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Failed to add chapter: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-   
-
-    // Get all chapters (optional, for convenience)
+    // Get all chapters
     @GetMapping
-    public ResponseEntity<List<Chapter>> getAllChapters() {
-        List<Chapter> chapters = chapterService.getAllChapters();
-        return ResponseEntity.ok(chapters);
+    public ResponseEntity<?> getAllChapters() {
+        try {
+            List<Chapter> chapters = chapterService.getAllChapters();
+            return ResponseEntity.ok(chapters);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Failed to fetch chapters: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    
- // Update an existing chapter
+
+    // Update an existing chapter
     @PutMapping("/{cid}")
-    public ResponseEntity<Chapter> updateChapter(@PathVariable("cid") Long cid, @RequestBody Chapter chapter) {
-        Chapter existingChapter = chapterService.getByChapterNumber(cid);
-        
-        if (existingChapter == null) {
-            return ResponseEntity.notFound().build(); // Handle case where chapter doesn't exist
+    public ResponseEntity<?> updateChapter(@PathVariable("cid") Long cid, @RequestBody Chapter chapter) {
+        try {
+            Chapter existingChapter = chapterService.getByChapterNumber(cid);
+            if (existingChapter == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chapter not found");
+            }
+            existingChapter.setTitle(chapter.getTitle());
+            // Update other fields if needed
+            Chapter updatedChapter = chapterService.saveChapter(existingChapter);
+            return ResponseEntity.ok(updatedChapter);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Failed to update chapter: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        // Update the fields of the existing chapter with the new data from the request body
-        existingChapter.setTitle(chapter.getTitle());
-        existingChapter.setChapterNumber(chapter.getChapterNumber());
-        // Update any other fields that are required for the chapter
-
-        Chapter updatedChapter = chapterService.saveChapter(existingChapter);
-        return ResponseEntity.ok(updatedChapter);
     }
- // Get a chapter by ID
+
+    // Get a chapter by ID
     @GetMapping("/{cid}")
-    public ResponseEntity<Chapter> getChapterById(@PathVariable("cid") Long cid) {
-        Chapter chapter = chapterService.getByChapterNumber(cid);
-        
-        if (chapter == null) {
-            return ResponseEntity.notFound().build(); // Handle case where chapter doesn't exist
+    public ResponseEntity<?> getChapterById(@PathVariable("cid") Long cid) {
+        try {
+            Chapter chapter = chapterService.getByChapterNumber(cid);
+            if (chapter == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Chapter not found");
+            }
+            return ResponseEntity.ok(chapter);
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        
-        return ResponseEntity.ok(chapter); // Return the found chapter
     }
-   
-   
 }
-

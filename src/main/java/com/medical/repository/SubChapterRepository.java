@@ -13,7 +13,7 @@ import com.medical.entity.SubChapter;
 
 public interface SubChapterRepository extends JpaRepository<SubChapter, Long> {
 
-	Optional<SubChapter> findByChapterAndSubchapterNumber(Chapter chapter, Integer subchapterNumber);
+	Optional<SubChapter> findByChapterAndSubchapterNumberAndContentType(Chapter chapter, Integer subchapterNumber,ContentType contentType);
 
 	@Query("SELECT COUNT(sc) FROM SubChapter sc WHERE sc.chapter.id = :chapterId AND sc.subchapterNumber = :subchapterNumber AND sc.contentType = :contentType")
     int countImagesForSubChapter(@Param("chapterId") Long chapterId, 
@@ -22,6 +22,8 @@ public interface SubChapterRepository extends JpaRepository<SubChapter, Long> {
 
 	@Query("SELECT sc FROM SubChapter sc WHERE sc.content LIKE CONCAT(:content, '%')")
 	Optional<SubChapter> findSubChapterByContentStartingWith(@Param("content") String content);
+
+	
 
 	
 
