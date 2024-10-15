@@ -71,7 +71,7 @@ public class ChapterController {
             return new ResponseEntity<>("Error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    
+
     @DeleteMapping("/{chapterNumber}")
     public ResponseEntity<Void> deleteChapter(@PathVariable Long chapterNumber) {
         try {
@@ -83,4 +83,5 @@ public class ChapterController {
     }
     
    
+
 }

@@ -142,6 +142,7 @@ public class SubChapterController {
     
     @GetMapping("{contentType}/{cid}/{subChapterId}")
     public SubChapter getSubChapterByContentTypeText(
+
     		@PathVariable Long cid,
             @PathVariable Integer subChapterId, 
             @PathVariable ContentType contentType
@@ -222,6 +223,7 @@ public class SubChapterController {
         SubChapter subChapter = subChapterService.getSubChapterById(id);
         return ResponseEntity.ok(subChapter);
     }
+
     
     
     
@@ -276,7 +278,5 @@ public class SubChapterController {
        
 
     
-   
-    
-    
+
 }

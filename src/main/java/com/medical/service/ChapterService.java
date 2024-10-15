@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.medical.entity.Chapter;
+
 import com.medical.entity.NriDoctorEntity;
+
 import com.medical.repository.ChapterRepository;
 
 import java.util.List;
@@ -44,6 +46,7 @@ public class ChapterService {
         return chapterRepository.findByChapterNumber(chapterNumber)
                 .orElseThrow(() -> new RuntimeException("Chapter not found with number: " + chapterNumber));
     }
+
     public void deleteChapterByChapterNumber(Long chapterNumber) {
         Optional<Chapter> chapterOpt = chapterRepository.findByChapterNumber(chapterNumber);
         if (chapterOpt.isPresent()) {
@@ -59,4 +62,8 @@ public class ChapterService {
     
    
     
+
+
+
+
 

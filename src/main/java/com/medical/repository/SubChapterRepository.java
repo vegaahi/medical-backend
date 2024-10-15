@@ -24,7 +24,6 @@ public interface SubChapterRepository extends JpaRepository<SubChapter, Long> {
 	Optional<SubChapter> findSubChapterByContentStartingWith(@Param("content") String content);
 
 
-	
 
 	
 

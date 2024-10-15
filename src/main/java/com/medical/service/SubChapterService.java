@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.medical.entity.Chapter;
 import com.medical.entity.ContentType;
+
 import com.medical.entity.NriDoctorEntity;
+
 import com.medical.entity.SubChapter;
 import com.medical.repository.SubChapterRepository;
 
@@ -59,6 +61,7 @@ public class SubChapterService {
 	        return subChapterRepository.findSubChapterByContentStartingWith(content);
 	    }
 
+
 //	public void deleteSubChapter(SubChapter subChapter) {
 //		
 //   
@@ -88,5 +91,6 @@ public class SubChapterService {
 	    }
 	
     
+
 
 }
