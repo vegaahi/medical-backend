@@ -23,7 +23,7 @@ public interface SubChapterRepository extends JpaRepository<SubChapter, Long> {
 	@Query("SELECT sc FROM SubChapter sc WHERE sc.content LIKE CONCAT(:content, '%')")
 	Optional<SubChapter> findSubChapterByContentStartingWith(@Param("content") String content);
 
-	
+
 
 	
 

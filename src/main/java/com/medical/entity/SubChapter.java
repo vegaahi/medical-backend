@@ -39,6 +39,8 @@ public class SubChapter {
     @Column(name = "content_type", nullable = false) 
     private ContentType contentType;  // Enum for 'text' or 'image' 
     
+
     @Column(name = "content",columnDefinition = "TEXT", nullable = false) 
+
     private String content; 
 }
