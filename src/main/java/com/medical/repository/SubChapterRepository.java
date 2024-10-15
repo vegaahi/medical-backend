@@ -15,13 +15,14 @@ public interface SubChapterRepository extends JpaRepository<SubChapter, Long> {
 
 	Optional<SubChapter> findByChapterAndSubchapterNumberAndContentType(Chapter chapter, Integer subchapterNumber,ContentType contentType);
 
-	@Query("SELECT COUNT(sc) FROM SubChapter sc WHERE sc.chapter.id = :chapterId AND sc.subchapterNumber = :subchapterNumber AND sc.contentType = :contentType")
+	@Query("SELECT COUNT(sc) FROM SubChapter sc WHERE sc.chapter.chapterNumber = :chapterId AND sc.subchapterNumber = :subchapterNumber AND sc.contentType = :contentType")
     int countImagesForSubChapter(@Param("chapterId") Long chapterId, 
                                  @Param("subchapterNumber") Integer subchapterNumber, 
                                  @Param("contentType") ContentType contentType);
 
 	@Query("SELECT sc FROM SubChapter sc WHERE sc.content LIKE CONCAT(:content, '%')")
 	Optional<SubChapter> findSubChapterByContentStartingWith(@Param("content") String content);
+
 
 	
 

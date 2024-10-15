@@ -141,7 +141,7 @@ public class SubChapterController {
     
     
     @GetMapping("{contentType}/{cid}/{subChapterId}")
-    public SubChapter getSubChaoterByContentTypeText(
+    public SubChapter getSubChapterByContentTypeText(
     		@PathVariable Long cid,
             @PathVariable Integer subChapterId, 
             @PathVariable ContentType contentType
@@ -222,4 +222,61 @@ public class SubChapterController {
         SubChapter subChapter = subChapterService.getSubChapterById(id);
         return ResponseEntity.ok(subChapter);
     }
+    
+    
+    
+    @DeleteMapping("{contentType}/{cid}/{subChapterId}")
+    public ResponseEntity<String> deleteSubChapter(
+            @PathVariable Long cid,
+            @PathVariable Integer subChapterId, 
+            @PathVariable ContentType contentType) {
+
+    	 // Fetch the subchapter by chapter and subchapter number
+         SubChapter subChapter = getSubChapterByContentTypeText(cid,subChapterId,contentType);
+         if (subChapter == null) {
+             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for chapter: " + cid + " and subchapter: " + subChapterId);
+         }else {
+        subChapterService.deleteSubChapter(subChapter);
+         }
+        return ResponseEntity.ok("SubChapter deleted successfully");
+    }
+    
+
+    @DeleteMapping("image/{chapterId}/{subchapterNumber}/{imageNumber}")
+       public ResponseEntity<String> deleteSubChapterImage(
+               @PathVariable("chapterId") Long chapterId,
+               @PathVariable("subchapterNumber") Integer subchapterNumber,
+               @PathVariable("imageNumber") String imageNumber) {
+           
+           String existingImageName = "Image_" + chapterId + "_" + subchapterNumber + "_" + imageNumber;
+
+           // Ensure the chapter exists
+           Chapter chapter = chapterRepository.findByChapterNumber(chapterId)
+                   .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
+
+           try {
+               // Check if the image exists and delete the image
+               SubChapter existingSubChapter = subChapterService.findSubChapterByContent(existingImageName)
+                       .orElseThrow(() -> new RuntimeException("Image with name " + existingImageName + " not found"));
+
+               // Delete the old image file
+               Path existingFilePath = Paths.get(uploadDir + File.separator + existingImageName);
+               Files.deleteIfExists(existingFilePath);
+
+               // Remove the subchapter entry from the database
+               subChapterService.deleteSubChapter(existingSubChapter);
+
+               return ResponseEntity.ok("Image deleted successfully.");
+           } catch (IOException e) {
+               return ResponseEntity.status(500).body("Error while deleting image.");
+           }
+       }
+
+   
+       
+
+    
+   
+    
+    
 }

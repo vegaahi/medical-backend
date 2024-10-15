@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.medical.entity.Chapter;
 import com.medical.entity.ContentType;
+import com.medical.entity.NriDoctorEntity;
 import com.medical.entity.SubChapter;
 import com.medical.repository.SubChapterRepository;
 
@@ -57,5 +58,35 @@ public class SubChapterService {
 	 public Optional<SubChapter> findSubChapterByContent(String content) {
 	        return subChapterRepository.findSubChapterByContentStartingWith(content);
 	    }
+
+//	public void deleteSubChapter(SubChapter subChapter) {
+//		
+//   
+//		subChapterRepository.delete(subChapter).orElseThrow(() -> new RuntimeException("SubChapter not found for given chapter and subchapter number"));
+//       
+//	}
+	 public void deleteSubChapter(SubChapter subChapter) {
+		    subChapterRepository.delete(subChapter);
+		}
+
+	 public void deleteSubChapterImage(Chapter chapter, Integer subChapterNumber) {
+	        SubChapter subChapter = subChapterRepository.findByChapterAndSubchapterNumberAndContentType(chapter, subChapterNumber, ContentType.IMAGE)
+	                .orElseThrow(() -> new RuntimeException("SubChapter image not found for given chapter and subchapter number"));
+	        subChapterRepository.delete(subChapter);
+	    }
+	
+	 public void deleteSubChapterImage(Chapter chapter, Integer subchapterNumber, String imageName) {
+	        SubChapter subChapter = subChapterRepository.findByChapterAndSubchapterNumberAndContentType(
+	                chapter, subchapterNumber, ContentType.IMAGE)
+	                .orElseThrow(() -> new RuntimeException("SubChapter image not found for given chapter and subchapter number"));
+	        
+	        if (subChapter.getContent().equals(imageName)) {
+	            subChapterRepository.delete(subChapter);
+	        } else {
+	            throw new RuntimeException("Image not found with name: " + imageName);
+	        }
+	    }
+	
+    
 
 }
