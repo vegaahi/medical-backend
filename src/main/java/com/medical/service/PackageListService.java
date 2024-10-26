@@ -1,5 +1,6 @@
 package com.medical.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class PackageListService {
 
     // Create a new package
     public PackageList createPackageList(PackageList packageList) {
+    	packageList.setCreatedAt(LocalDateTime.now());
         return packageListRepository.save(packageList);
     }
 

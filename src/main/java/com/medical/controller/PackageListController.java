@@ -38,7 +38,7 @@ public class PackageListController {
     }
 
     // Create a new package
-    @PostMapping("/post/{id}")
+    @PostMapping("/post")
     public ResponseEntity<PackageList> createPackageList(@RequestBody PackageList packageList) {
         PackageList createdPackage = packageListService.createPackageList(packageList);
         return new ResponseEntity<>(createdPackage, HttpStatus.CREATED);
