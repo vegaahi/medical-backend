@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admins/subchapter/")
+@RequestMapping("/admins/subchapter/") 
 public class SubChapterController {
 
     @Autowired
