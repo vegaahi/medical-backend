@@ -3,7 +3,6 @@ package com.medical.entity;
 
 import jakarta.persistence.Entity;
 import lombok.*;
-
 @Entity
 @Data
 @NoArgsConstructor

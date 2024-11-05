@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/Student") // Base URL for student-related requests
+@RequestMapping("/api/Student") 
 public class StudentController {
 
     private final CustomerService customersService;
