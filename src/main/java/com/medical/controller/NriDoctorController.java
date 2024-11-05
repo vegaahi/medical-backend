@@ -7,45 +7,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/nri-doctors")
 public class NriDoctorController {
 
-    private final NriDoctorService nriDoctorService;
-
     @Autowired
-    public NriDoctorController(NriDoctorService nriDoctorService) {
-        this.nriDoctorService = nriDoctorService;
-    }
+    private NriDoctorService nriDoctorService;
 
-    
     @GetMapping
     public List<NriDoctorEntity> getAllNriDoctors() {
         return nriDoctorService.getAllNriDoctors();
     }
 
-    
     @GetMapping("/{id}")
     public ResponseEntity<NriDoctorEntity> getNriDoctorById(@PathVariable Long id) {
-        return nriDoctorService.getNriDoctorById(id)
-                .map(doctor -> ResponseEntity.ok().body(doctor))
-                .orElse(ResponseEntity.notFound().build());
+        Optional<NriDoctorEntity> doctor = nriDoctorService.getNriDoctorById(id);
+        return doctor.map(ResponseEntity::ok)
+                     .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-  
     @PostMapping
-    public NriDoctorEntity createNriDoctor(@RequestBody NriDoctorEntity nriDoctorEntity) {
-        return nriDoctorService.createNriDoctor(nriDoctorEntity);
+    public NriDoctorEntity createNriDoctor(@RequestBody NriDoctorEntity doctor) {
+        return nriDoctorService.saveNriDoctor(doctor);
     }
 
-   
-    @PutMapping("/{id}")
-    public ResponseEntity<NriDoctorEntity> updateNriDoctor(@PathVariable Long id, @RequestBody NriDoctorEntity nriDoctorEntityDetails) {
-        return ResponseEntity.ok(nriDoctorService.updateNriDoctor(id, nriDoctorEntityDetails));
-    }
-
-   
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNriDoctor(@PathVariable Long id) {
         nriDoctorService.deleteNriDoctor(id);

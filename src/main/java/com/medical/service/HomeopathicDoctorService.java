@@ -12,34 +12,21 @@ import java.util.Optional;
 public class HomeopathicDoctorService {
 
     @Autowired
-    private HomeopathicDoctorRepository repository;
-
-    public HomeopathicDoctorEntity saveDoctor(HomeopathicDoctorEntity doctor) {
-        return repository.save(doctor);
-    }
+    private HomeopathicDoctorRepository homeopathicDoctorRepository;
 
     public List<HomeopathicDoctorEntity> getAllDoctors() {
-        return repository.findAll();
+        return homeopathicDoctorRepository.findAll();
     }
 
-    public HomeopathicDoctorEntity getDoctorById(Long id) {
-        Optional<HomeopathicDoctorEntity> doctor = repository.findById(id);
-        return doctor.orElse(null);
+    public Optional<HomeopathicDoctorEntity> getDoctorById(Long id) {
+        return homeopathicDoctorRepository.findById(id);
     }
 
-    public HomeopathicDoctorEntity updateDoctor(Long id, HomeopathicDoctorEntity updatedDoctor) {
-        if (repository.existsById(id)) {
-            updatedDoctor.setId(id);
-            return repository.save(updatedDoctor);
-        }
-        return null;
+    public HomeopathicDoctorEntity saveDoctor(HomeopathicDoctorEntity doctor) {
+        return homeopathicDoctorRepository.save(doctor);
     }
 
-    public boolean deleteDoctor(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteDoctor(Long id) {
+        homeopathicDoctorRepository.deleteById(id);
     }
 }

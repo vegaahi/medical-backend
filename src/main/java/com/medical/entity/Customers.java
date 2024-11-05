@@ -49,9 +49,9 @@ public abstract class Customers {
     @Column(name = "total_coupons")
     private int totalCoupons = 0;
 
-    // One User can have many coins
-//    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Coin> coins;
+     //One User can have many coins
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Coins> coins;
 //
 //    // One User can have many tokens
 //    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
