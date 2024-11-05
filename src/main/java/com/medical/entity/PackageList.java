@@ -26,7 +26,7 @@ public class PackageList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long packageId;
     
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique=true)
     private String packageName;
     
     @Column(nullable = false, length = 50)
