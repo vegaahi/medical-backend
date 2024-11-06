@@ -2,6 +2,8 @@ package com.medical.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.medical.entity.Coins;
+import com.medical.entity.Customers;
 import com.medical.entity.Student;
 import com.medical.repository.CustomerRepository;
 import com.medical.repository.StudentRepository;
@@ -41,4 +43,9 @@ public class CustomerService {
     public void deleteStudent(Long id) {
         studentRepository.deleteById(id);
     }
+
+	public Customers getCustomerById(Long customerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
