@@ -1,6 +1,7 @@
 package com.medical.service;
 
 import com.medical.entity.Coins;
+import com.medical.entity.Customers;
 import com.medical.repository.CoinsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class CoinsService {
     private final CoinsRepository coinsRepository;
 
     @Autowired
-    public CoinsService(CoinsRepository coinRepository) {
-        this.coinsRepository = coinRepository;
+    public CoinsService(CoinsRepository coinsRepository) {
+        this.coinsRepository = coinsRepository;
     }
 
     public List<Coins> getAllCoins() {
@@ -27,12 +28,12 @@ public class CoinsService {
         return coinsRepository.findById(id);
     }
 
-    public List<Coins> getCoinsByCustomerId(Long customerId) {
-        return coinsRepository.findByCustomerId(customerId);
+    public List<Coins> getCoinsByCustomer(Customers customers) {
+        return coinsRepository.findByCustomers(customers);
     }
 
-    public List<Coins> getCoinsByCustomerIdAndDate(Long customerId, LocalDate date) {
-        return coinsRepository.findByCustomerIdAndDate(customerId, date);
+    public List<Coins> getCoinsByCustomerAndDate(Customers customers, LocalDate date) {
+        return coinsRepository.findByCustomersAndDate(customers, date);
     }
 
     public Coins saveCoin(Coins coins) {

@@ -19,11 +19,11 @@ public class Coins {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id") // Foreign key to Customers table
-    private Customers customer; // Reference to Customers entity
+    @JoinColumn(name = "customer_id") 
+    private Customers customers; 
 
-    private int amount; // Amount of coins or some other relevant field
-    private LocalDate date; // Date of coin allocation or related date
+    private int amount;
+    private LocalDate date; 
 
-    // Add any additional fields as necessary
+
 }

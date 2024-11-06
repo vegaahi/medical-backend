@@ -1,6 +1,9 @@
 package com.medical.entity;
 import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,16 +53,18 @@ public abstract class Customers {
     private int totalCoupons = 0;
 
      //One User can have many coins
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Coins> coins;
-//
-//    // One User can have many tokens
-//    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Token> tokens;
-//
-//    // One User can have many coupons
-//    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Coupon> coupons;
+    // One User can have many tokens
+    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Token> tokens;
+
+    // One User can have many coupons
+    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Coupons> coupons;
 
     @Enumerated(EnumType.STRING)
     private CustomerType customerType; // Enum to differentiate types

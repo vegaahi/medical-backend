@@ -1,23 +1,31 @@
 package com.medical.controller;
 
 import com.medical.entity.Coins;
+import com.medical.entity.Customers;
 import com.medical.service.CoinsService;
+import com.medical.service.CustomerService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/coins")
 public class CoinsController {
 
+	@Autowired
+	private final CustomerService customerservice;
+	
     private final CoinsService coinsService;
-
+   
     @Autowired
     public CoinsController(CoinsService coinsService) {
-        this.coinsService = coinsService;
+        this.customerservice = null;
+		this.coinsService = coinsService;
     }
 
     @GetMapping
@@ -35,7 +43,9 @@ public class CoinsController {
 
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Coins>> getCoinsByCustomerId(@PathVariable Long customerId) {
-        List<Coins> coins = coinsService.getCoinsByCustomerId(customerId);
+          Customers customer = customerservice.getCustomerById(customerId);
+    	
+    	List<Coins> coins = coinsService.getCoinsByCustomer(customer);
         return ResponseEntity.ok(coins);
     }
 
@@ -43,7 +53,8 @@ public class CoinsController {
     public ResponseEntity<List<Coins>> getCoinsByCustomerIdAndDate(
             @PathVariable Long customerId,
             @RequestParam LocalDate date) {
-        List<Coins> coins = coinsService.getCoinsByCustomerIdAndDate(customerId, date);
+    	 Customers customer = customerservice.getCustomerById(customerId);
+        List<Coins> coins = coinsService.getCoinsByCustomerAndDate(customer, date);
         return ResponseEntity.ok(coins);
     }
 
