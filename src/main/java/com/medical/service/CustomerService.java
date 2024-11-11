@@ -10,25 +10,31 @@ import com.medical.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 @Service
 public class CustomerService {
 
     private final CustomerRepository customersRepository;
     private final StudentRepository studentRepository;
 
+ @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     public CustomerService(CustomerRepository customersRepository,
-                                StudentRepository studentRepository) {
+                           StudentRepository studentRepository,
+                           PasswordEncoder passwordEncoder) {
         this.customersRepository = customersRepository;
         this.studentRepository = studentRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Method to save a Customer (Student)
-    public Student saveStudent(Student student) {
+public Student saveStudent(Student student) {
+        student.setPassword(passwordEncoder.encode(student.getPassword()));
+        student.setConfirmPassword(passwordEncoder.encode(student.getConfirmPassword()));
         return studentRepository.save(student);
     }
-
     // Method to get a Student by ID
     public Optional<Student> getStudentById(Long id) {
         return studentRepository.findById(id);
@@ -48,4 +54,7 @@ public class CustomerService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    public List<Customers> getAllCustomers() {
+    return customersRepository.findAll();
+}
 }

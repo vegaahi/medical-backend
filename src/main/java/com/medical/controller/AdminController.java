@@ -12,7 +12,7 @@ import com.medical.service.AdminService;
 
 @RestController
 
-@RequestMapping("/admins")
+@RequestMapping
 public class AdminController {
 
 	@Autowired
@@ -25,13 +25,13 @@ public class AdminController {
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("/admins/{id}")
     public ResponseEntity<Admin> getAdminById(@PathVariable Long id) {
         return adminService.getAdminById(id)
                 .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-    @GetMapping("/getbyusername/{username}")
+    @GetMapping("/admins/getbyusername/{username}")
     public ResponseEntity<Admin> getAdminByUsername(@PathVariable String username) {
         return adminService.findByUsername(username)
                 .map(admin -> new ResponseEntity<>(admin, HttpStatus.OK))
@@ -39,20 +39,20 @@ public class AdminController {
     }
 
 
-    @PostMapping("/{id}")
+    @PostMapping("/api/admins/post")
     public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin) {
         Admin savedAdmin = adminService.createAdmin(admin);
         return new ResponseEntity<>(savedAdmin, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/admins/{id}")
     public ResponseEntity<Admin> updateAdmin(@PathVariable Long id, @RequestBody Admin adminDetails) {
         return adminService.updateAdmin(id, adminDetails)
                 .map(updatedAdmin -> new ResponseEntity<>(updatedAdmin, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admins/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable Long id) {
         boolean isDeleted = adminService.deleteAdmin(id);
         return isDeleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
