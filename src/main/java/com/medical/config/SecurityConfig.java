@@ -144,7 +144,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class SpringConfig {
+public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
