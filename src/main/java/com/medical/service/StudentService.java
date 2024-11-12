@@ -17,27 +17,27 @@
 //
 //@Service
 // public class StudentService implements UserDetailsService{
-//	
+//
 // private BCryptPasswordEncoder encoder=new BCryptPasswordEncoder(12);
-// 
+//
 //    private StudentRepository studentRepository;
-//    
-//    @Autowired 
+//
+//    @Autowired
 //    public StudentService(StudentRepository studentRepository) {
 //        this.studentRepository = studentRepository;
 //    }
-//    
-//    
+//
+//
 //    public List<Student> getAllStudents() {
 //        return studentRepository.findAll();
 //    }
-//    
+//
 //    public Optional<Student> getStudentById(Long id) {
-//    	
+//
 //        return studentRepository.findById(id);
 //    }
-//  
-//  
+//
+//
 //    public Student createStudent(Student student) {
 //    	student.setPassword(encoder.encode(student.getPassword()));
 //        return studentRepository.save(student);
@@ -85,7 +85,7 @@
 //		return new StudentPrincipal(student);
 //	}
 //
-//	
 //
-//    
+//
+//
 //}

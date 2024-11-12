@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.medical.entity.Admin;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class AdminService {
 	   @Autowired
 	    private AdminRepository adminRepository;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	    public List<Admin> getAllAdmins() {
 	        return adminRepository.findAll();
@@ -26,9 +29,10 @@ public class AdminService {
 	        return adminRepository.findById(id);
 	    }
 
-	    public Admin createAdmin(Admin admin) {
-	        return adminRepository.save(admin);
-	    }
+	  public Admin createAdmin(Admin admin) {
+    admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+    return adminRepository.save(admin);
+}
 
 	    public Optional<Admin> updateAdmin(Long id, Admin adminDetails) {
 	        return adminRepository.findById(id)

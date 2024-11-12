@@ -10,30 +10,35 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/nri-doctors")
+@RequestMapping
 public class NriDoctorController {
 
     @Autowired
     private NriDoctorService nriDoctorService;
 
-    @GetMapping
+    @GetMapping("/admins/nri-doctors")
     public List<NriDoctorEntity> getAllNriDoctors() {
         return nriDoctorService.getAllNriDoctors();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<NriDoctorEntity> getNriDoctorById(@PathVariable Long id) {
+    @GetMapping("/customers/nri-doctors/{id}")
+    public ResponseEntity<NriDoctorEntity> getNriDoctorByIdByCustomer(@PathVariable Long id) {
         Optional<NriDoctorEntity> doctor = nriDoctorService.getNriDoctorById(id);
         return doctor.map(ResponseEntity::ok)
                      .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    @PostMapping
+    @GetMapping("/admins/nri-doctors/{id}")
+    public ResponseEntity<NriDoctorEntity> getNriDoctorByIdByAdmin(@PathVariable Long id) {
+        Optional<NriDoctorEntity> doctor = nriDoctorService.getNriDoctorById(id);
+        return doctor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @PostMapping("/api/nri-doctors/post")
     public NriDoctorEntity createNriDoctor(@RequestBody NriDoctorEntity doctor) {
         return nriDoctorService.saveNriDoctor(doctor);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/admins/nri-doctors/delete/{id}")
     public ResponseEntity<Void> deleteNriDoctor(@PathVariable Long id) {
         nriDoctorService.deleteNriDoctor(id);
         return ResponseEntity.noContent().build();

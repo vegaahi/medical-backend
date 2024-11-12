@@ -19,6 +19,7 @@ public abstract class Customers {
     private long id;
 
     private String fullName;
+    @Column(unique = true)
     private String email;
     private String mobileNumber; // Phone numbers as String
     private LocalDate dob; // Date of birth should use LocalDate
