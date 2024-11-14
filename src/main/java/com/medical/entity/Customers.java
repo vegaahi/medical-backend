@@ -70,6 +70,7 @@ public abstract class Customers {
     @Enumerated(EnumType.STRING)
     private CustomerType customerType; // Enum to differentiate types
 
+
     public enum CustomerType {
         STUDENT, HOMEOPATHICDOCTORENTITY, NRIDOCTORENTITY
     }
