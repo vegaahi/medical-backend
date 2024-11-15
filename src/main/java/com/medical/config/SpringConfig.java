@@ -28,7 +28,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SpringConfig {
 
     private final CustomerRepository customersRepository;
     private final AdminRepository adminRepository;
