@@ -4,6 +4,7 @@ package com.medical.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.medical.entity.Chapter;
@@ -13,6 +14,7 @@ import com.medical.entity.NriDoctorEntity;
 
 import com.medical.entity.SubChapter;
 import com.medical.repository.SubChapterRepository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +51,7 @@ public class SubChapterService {
 
     public SubChapter getSubChapterByChapterAndSubchapterNumberAndContentType(Chapter chapter, Integer subchapterNumber, ContentType contentType) {
         return subChapterRepository.findByChapterAndSubchapterNumberAndContentType(chapter, subchapterNumber,contentType)
-                .orElseThrow(() -> new RuntimeException("SubChapter not found for given chapter and subchapter number"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SubChapter not found for given chapter and subchapter number"));
     }
 
 	public int countImagesForSubChapter(Long chapterId, Integer subchapterNumber) {

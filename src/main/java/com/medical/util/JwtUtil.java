@@ -20,14 +20,14 @@ public class JwtUtil {
     private final SecretKey secretKey;
 
 
-public JwtUtil() {
-    Dotenv dotenv = Dotenv.load();
-    String secret = dotenv.get("JWT_SECRET_KEY");
-    if (secret == null) {
-        throw new IllegalStateException("JWT_SECRET_KEY environment variable is not set");
+    public JwtUtil() {
+        Dotenv dotenv = Dotenv.load();
+        String secret = dotenv.get("JWT_SECRET_KEY");
+        if (secret == null) {
+            throw new IllegalStateException("JWT_SECRET_KEY environment variable is not set");
+        }
+        this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
     }
-    this.secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
-}
 
     // Generate JWT token
     public String generateToken(String username) {
