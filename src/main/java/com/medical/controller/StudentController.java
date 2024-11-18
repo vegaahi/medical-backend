@@ -24,7 +24,7 @@ public class StudentController {
         this.customersService = customersService;
     }
 
-    // Endpoint to create a new student
+    // Endpoint to create a new student this is registration 
     @PostMapping("/api/Student/post")
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student savedStudent = customersService.saveStudent(student);
