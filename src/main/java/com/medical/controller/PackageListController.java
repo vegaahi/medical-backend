@@ -18,34 +18,34 @@ import com.medical.entity.PackageList;
 import com.medical.service.PackageListService;
 
 @RestController
-@RequestMapping("/admins/packagelist")
+@RequestMapping()
 public class PackageListController {
 
     @Autowired
     private PackageListService packageListService;
 
-    @GetMapping("/packages")
+    @GetMapping("/admins/packagelist/packages")
     public ResponseEntity<List<PackageList>> getAllPackageList() {
         List<PackageList> packageList = packageListService.getAllPackageLists();
         return new ResponseEntity<>(packageList, HttpStatus.OK);
     }
     
     // Get a package by ID
-    @GetMapping("/get/{id}")
+    @GetMapping("/admins/packagelist/get/{id}")
     public ResponseEntity<PackageList> getPackageListById(@PathVariable Long id) {
         PackageList packageList = packageListService.getPackageListById(id);
         return new ResponseEntity<>(packageList, HttpStatus.OK);
     }
 
     // Create a new package
-    @PostMapping("/post")
+    @PostMapping("/admins/packagelist/post")
     public ResponseEntity<PackageList> createPackageList(@RequestBody PackageList packageList) {
         PackageList createdPackage = packageListService.createPackageList(packageList);
         return new ResponseEntity<>(createdPackage, HttpStatus.CREATED);
     }
 
     // Update an existing package by ID
-    @PutMapping("/put/{id}")
+    @PutMapping("/admins/packagelist/put/{id}")
     public ResponseEntity<PackageList> updatePackageListById(
             @PathVariable Long id, @RequestBody PackageList packageList) {
         PackageList updatedPackage = packageListService.updatePackageListById(id, packageList);
@@ -53,7 +53,7 @@ public class PackageListController {
     }
 
     // Delete a package by ID
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/admins/packagelist/delete/{id}")
     public ResponseEntity<Void> deletePackageListById(@PathVariable Long id) {
         packageListService.deletePackageList(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
