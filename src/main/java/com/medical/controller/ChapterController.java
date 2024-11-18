@@ -13,14 +13,14 @@ import com.medical.entity.Chapter;
 import com.medical.service.AdminService;
 import com.medical.service.ChapterService;
 @RestController
-@RequestMapping("/admins/chapter/")
+@RequestMapping()
 public class ChapterController {
 
     @Autowired
     private ChapterService chapterService;
 
     // Add a new chapter
-    @PostMapping("/{cid}")
+    @PostMapping("/admins/chapter/{cid}")
     public ResponseEntity<?> addChapter(@RequestBody Chapter chapter) {
         try {
             Chapter savedChapter = chapterService.saveChapter(chapter);
@@ -31,7 +31,7 @@ public class ChapterController {
     }
 
     // Get all chapters
-    @GetMapping
+    @GetMapping("/admins/chapter/")
     public ResponseEntity<?> getAllChapters() {
         try {
             List<Chapter> chapters = chapterService.getAllChapters();
@@ -42,7 +42,7 @@ public class ChapterController {
     }
 
     // Update an existing chapter
-    @PutMapping("/{cid}")
+    @PutMapping("/admins/chapter/{cid}")
     public ResponseEntity<?> updateChapter(@PathVariable("cid") Long cid, @RequestBody Chapter chapter) {
         try {
             Chapter existingChapter = chapterService.getByChapterNumber(cid);
@@ -59,7 +59,7 @@ public class ChapterController {
     }
 
     // Get a chapter by ID
-    @GetMapping("/{cid}")
+    @GetMapping("/admins/chapter/{cid}")
     public ResponseEntity<?> getChapterById(@PathVariable("cid") Long cid) {
         try {
             Chapter chapter = chapterService.getByChapterNumber(cid);
@@ -72,7 +72,7 @@ public class ChapterController {
         }
     }
 
-    @DeleteMapping("/{chapterNumber}")
+    @DeleteMapping("/admins/chapter/{chapterNumber}")
     public ResponseEntity<Void> deleteChapter(@PathVariable Long chapterNumber) {
         try {
             chapterService.deleteChapterByChapterNumber(chapterNumber);
