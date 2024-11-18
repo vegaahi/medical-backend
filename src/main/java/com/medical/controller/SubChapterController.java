@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admins/subchapter/") 
+@RequestMapping()
 public class SubChapterController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class SubChapterController {
     private String uploadDir;
 
     // Add a new subchapter (Text)
-    @PostMapping("/text")
+    @PostMapping("/admins/subchapter/text")
     public ResponseEntity<String> createSubChapter(@RequestBody SubChapter subChapter, @RequestParam Long chapterNumber) {
     	Chapter chapter = chapterRepository.findByChapterNumber(chapterNumber)
                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterNumber));
@@ -51,7 +51,7 @@ public class SubChapterController {
         return ResponseEntity.ok("SubChapter created successfully");
     }
 
-    @PostMapping("/image")
+    @PostMapping("/admins/subchapter/image")
     public ResponseEntity<String> uploadSubChapterWithImage(
             @RequestParam("chapterId") Long chapterId,
             @RequestParam("subchapterNumber") Integer subchapterNumber,
@@ -105,7 +105,7 @@ public class SubChapterController {
 
 
     // Update an existing subchapter (Text)
-    @PutMapping("{contentType}/{cid}/{subChapterId}")
+    @PutMapping("/admins/subchapter/{contentType}/{cid}/{subChapterId}")
     public ResponseEntity<String> updateSubChapter(
             @PathVariable Long cid,
             @PathVariable Integer subChapterId, 
@@ -140,7 +140,7 @@ public class SubChapterController {
     }
     
     
-    @GetMapping("{contentType}/{cid}/{subChapterId}")
+    @GetMapping("/admins/subchapter/{contentType}/{cid}/{subChapterId}")
     public SubChapter getSubChapterByContentTypeText(
 
     		@PathVariable Long cid,
@@ -160,7 +160,7 @@ public class SubChapterController {
     }
 
 
-    @PutMapping("/image/{chapterId}/{subchapterNumber}/{imageNumber}")
+    @PutMapping("/admins/subchapter/image/{chapterId}/{subchapterNumber}/{imageNumber}")
     public ResponseEntity<String> updateSubChapterWithImage(
             @PathVariable("chapterId") Long chapterId,
             @PathVariable("subchapterNumber") Integer subchapterNumber,
@@ -218,7 +218,7 @@ public class SubChapterController {
 
 
     // Get a single subchapter by ID (optional)
-    @GetMapping("/{id}")
+    @GetMapping("/admins/subchapter/{id}")
     public ResponseEntity<SubChapter> getSubChapterById(@PathVariable Long id) {
         SubChapter subChapter = subChapterService.getSubChapterById(id);
         return ResponseEntity.ok(subChapter);
@@ -227,7 +227,7 @@ public class SubChapterController {
     
     
     
-    @DeleteMapping("{contentType}/{cid}/{subChapterId}")
+    @DeleteMapping("/admins/subchapter/{contentType}/{cid}/{subChapterId}")
     public ResponseEntity<String> deleteSubChapter(
             @PathVariable Long cid,
             @PathVariable Integer subChapterId, 
@@ -244,7 +244,7 @@ public class SubChapterController {
     }
     
 
-    @DeleteMapping("image/{chapterId}/{subchapterNumber}/{imageNumber}")
+    @DeleteMapping("/admins/subchapter/image/{chapterId}/{subchapterNumber}/{imageNumber}")
        public ResponseEntity<String> deleteSubChapterImage(
                @PathVariable("chapterId") Long chapterId,
                @PathVariable("subchapterNumber") Integer subchapterNumber,
