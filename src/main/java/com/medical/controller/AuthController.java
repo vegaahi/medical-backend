@@ -59,8 +59,10 @@ public class AuthController {
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            return ResponseEntity.ok("Login successful");
+//            return ResponseEntity.ok("Login successful");
+            return ResponseEntity.ok(accessToken);
         } catch (Exception e) {
+
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
@@ -102,7 +104,7 @@ public class AuthController {
             response.addCookie(accessTokenCookie);
 
             // Optionally return the token in the response body as well
-            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+            return ResponseEntity.ok("refreshed");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to refresh token.");
         }
