@@ -60,6 +60,14 @@ public class StudentController {
         List<Student> Student = customersService.getAllStudents();
         return ResponseEntity.ok(Student);
     }
+    
+    @GetMapping("/customers/get/customer/{id}")
+    public Customers getCustomerById(@PathVariable Long id) {
+    	Customers customer = customersService.getCustomerById(id) ;
+    	customer.setPassword(null);
+    	customer.setConfirmPassword(null);
+		return customer;
+    }
 
     // Endpoint to delete a student by ID
     @DeleteMapping("/admins/student/{id}")

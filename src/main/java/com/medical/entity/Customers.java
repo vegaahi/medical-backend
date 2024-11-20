@@ -3,6 +3,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,6 +15,17 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.NAME,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "customerType"
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Student.class, name = "STUDENT"),
+    @JsonSubTypes.Type(value = HomeopathicDoctorEntity.class, name = "HOMEOPATHICDOCTORENTITY"),
+    @JsonSubTypes.Type(value = NriDoctorEntity.class, name = "NRIDOCTORENTITY")
+})
 public abstract class Customers {
 
     @Id
@@ -61,6 +75,11 @@ public abstract class Customers {
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Token> tokens;
+    
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Tickets> tickets;
+
 
     // One User can have many coupons
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
