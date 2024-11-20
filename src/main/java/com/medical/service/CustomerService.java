@@ -52,8 +52,10 @@ public Student saveStudent(Student student) {
 
 	public Customers getCustomerById(Long customerId) {
 		// TODO Auto-generated method stub
-		return null;
+		return customersRepository.findById(customerId).orElseThrow(() -> new RuntimeException("Chapter not found with id: " + customerId));
 	}
+	
+	
     public List<Customers> getAllCustomers() {
     return customersRepository.findAll();
 }
