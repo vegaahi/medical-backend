@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -36,9 +37,10 @@ public class AuthController {
 
             // Load user details
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String role = userDetails.getAuthorities().iterator().next().getAuthority();
 
             // Generate JWT tokens
-            String accessToken = jwtUtil.generateToken(userDetails.getUsername());
+            String accessToken = jwtUtil.generateToken(userDetails.getUsername(), role);
             String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
 
             // Set access token in HTTP-only cookie
@@ -87,12 +89,14 @@ public class AuthController {
 
             // Validate the refresh token
             String username = jwtUtil.extractUserName(refreshToken);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String role = userDetails.getAuthorities().iterator().next().getAuthority();
             if (!jwtUtil.validateToken(refreshToken, username)) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired refresh token.");
             }
 
             // Generate a new access token
-            String newAccessToken = jwtUtil.generateToken(username);
+            String newAccessToken = jwtUtil.generateToken(username, role);
 
             // Set the new access token in a cookie
             Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
@@ -108,6 +112,56 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Failed to refresh token.");
         }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // Clear cookies
+        Cookie accessTokenCookie = new Cookie("accessToken", null);
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setSecure(true); // Use true in production with HTTPS
+        accessTokenCookie.setMaxAge(0); // Expire immediately
+        accessTokenCookie.setPath("/");
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true); // Use true in production with HTTPS
+        refreshTokenCookie.setMaxAge(0); // Expire immediately
+        refreshTokenCookie.setPath("/");
+
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+    @GetMapping("/validate")
+    public ResponseEntity<?> validateToken(HttpServletRequest request) {
+        String token = null;
+        String username = null;
+        String role = null;
+
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token != null) {
+            username = jwtUtil.extractUserName(token);
+            role = jwtUtil.extractRole(token); // Extract the role from token
+        }
+
+        if (token != null && jwtUtil.validateToken(token, username)) {
+            Map<String, String> response = new HashMap<>();
+            response.put("username", username);
+            response.put("role", role);
+            return ResponseEntity.ok(response); // Return role along with username
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
     }
 
 
