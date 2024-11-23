@@ -30,8 +30,9 @@ public class JwtUtil {
     }
 
     // Generate JWT token
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", role);
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -47,9 +48,6 @@ public class JwtUtil {
     public boolean validateToken(String token, String username) {
         String extractedUsername = extractUserName(token);
         System.out.println("Extracted Username: " + extractedUsername);
-        System.out.println("Input Username: " + username);
-        System.out.println("Is Token Expired: " + isTokenExpired(token));
-
         return (username.equals(extractedUsername) && !isTokenExpired(token));
     }
 
@@ -58,6 +56,11 @@ public class JwtUtil {
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    // Extract role from token
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
 
     // Check if token is expired
     public boolean isTokenExpired(String token) {
