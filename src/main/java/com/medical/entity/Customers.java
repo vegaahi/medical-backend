@@ -63,7 +63,7 @@ public abstract class Customers {
 
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Coins> coins;
+    private List<CoinsEntity> coins;
 
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
