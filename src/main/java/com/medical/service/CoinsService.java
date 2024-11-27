@@ -20,7 +20,7 @@ public class CoinsService {
 
 	    public void updateTotalTimeSpent(Long customerId, int timeSpent) {
 	        LocalDate today = LocalDate.now();
-	        Optional<CoinsEntity> optionalCoinsEntity = coinsRepository.findByUserCustomerAndDate(customerId, today);
+	        Optional<CoinsEntity> optionalCoinsEntity = coinsRepository.findByUserCustomerIdAndDate(customerId, today);
 
 	        CoinsEntity coinsEntity;
 
