@@ -1,6 +1,7 @@
 package com.medical.filter;
 
 import com.medical.service.CustomUserDetailsService;
+import com.medical.service.UserActivityService;
 import com.medical.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private UserActivityService userActivityService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -60,6 +64,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    // Track user activity
+                    userActivityService.trackUserActivity(username, false);
+
                 }
             }
         } catch (ExpiredJwtException e) {

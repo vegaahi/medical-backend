@@ -1,5 +1,6 @@
 package com.medical.controller;
 
+import com.medical.service.UserActivityService;
 import com.medical.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,9 @@ public class AuthController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UserActivityService userActivityService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -57,6 +61,10 @@ public class AuthController {
             refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days expiry
             refreshTokenCookie.setPath("/");
 
+            if(role.equals("ROLE_CUSTOMER")){
+                userActivityService.trackUserActivity(username, true);
+
+            }
             // Add cookies to response
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
