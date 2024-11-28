@@ -1,87 +1,41 @@
 package com.medical.controller;
 
-import com.medical.entity.Coins;
-import com.medical.entity.Customers;
-import com.medical.service.CoinsService;
-import com.medical.service.CustomerService;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.medical.service.CoinsService;
+import com.medical.entity.Coins;
+
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/coins")
+@RequestMapping("/coins")
 public class CoinsController {
 
-	@Autowired
-	private final CustomerService customerservice;
-	
-    private final CoinsService coinsService;
-   
     @Autowired
-    public CoinsController(CoinsService coinsService) {
-        this.customerservice = null;
-		this.coinsService = coinsService;
+    private CoinsService coinsService;
+
+    @PostMapping("/add")
+    public String addCoins(@RequestParam String email,@RequestParam String today) {
+        try {
+            LocalDate date = LocalDate.parse(today);
+            coinsService.addCoins(email, date);
+            return "Coin count updated successfully for " + email;
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Coins>> getAllCoins() {
-        List<Coins> coins = coinsService.getAllCoins();
-        return ResponseEntity.ok(coins);
-    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Coins> getCoinById(@PathVariable Long id) {
-        return coinsService.getCoinById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Coins>> getCoinsByCustomerId(@PathVariable Long customerId) {
-          Customers customer = customerservice.getCustomerById(customerId);
-    	
-    	List<Coins> coins = coinsService.getCoinsByCustomer(customer);
-        return ResponseEntity.ok(coins);
-    }
-
-    @GetMapping("/customer/{customerId}/date")
-    public ResponseEntity<List<Coins>> getCoinsByCustomerIdAndDate(
-            @PathVariable Long customerId,
-            @RequestParam LocalDate date) {
-    	 Customers customer = customerservice.getCustomerById(customerId);
-        List<Coins> coins = coinsService.getCoinsByCustomerAndDate(customer, date);
-        return ResponseEntity.ok(coins);
-    }
-
-    @PostMapping
-    public ResponseEntity<Coins> createCoin(@RequestBody Coins coins) {
-        Coins savedCoin = coinsService.saveCoin(coins);
-        return ResponseEntity.ok(savedCoin);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Coins> updateCoin(@PathVariable Long id, @RequestBody Coins coins) {
-        return coinsService.getCoinById(id)
-                .map(existingCoin -> {
-                    coins.setId(id);
-                    Coins updatedCoin = coinsService.saveCoin(coins);
-                    return ResponseEntity.ok(updatedCoin);
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCoin(@PathVariable Long id) {
-        if (coinsService.getCoinById(id).isPresent()) {
-            coinsService.deleteCoin(id);
-            return ResponseEntity.noContent().build();
+    // Endpoint to get the current coin count of a user
+    @GetMapping("/get/{email}")
+    public String getCoinCount(@PathVariable String email) {
+        // Use the service to get the coin count for the given email
+        Coins record = coinsService.getCoinsByEmail(email);
+        if (record != null) {
+            return "Coin count for " + email + ": " + record.getCoins();
         } else {
-            return ResponseEntity.notFound().build();
+            return "No record found for " + email;
         }
     }
 }
