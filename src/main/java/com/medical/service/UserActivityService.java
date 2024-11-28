@@ -15,7 +15,9 @@ public class UserActivityService {
 
     @Autowired
     private UserActivityRepository userActivityRepository;
-
+    
+     @Autowired
+     private CoinsService coinsService;
     @Transactional
     public void trackUserActivity(String email, boolean isLoginEvent) {
         LocalDate today = LocalDate.now();
@@ -49,15 +51,19 @@ public class UserActivityService {
 
                 // Update `lastActivityTime` on regular activity
                 userActivity.setLastActivityTime(Timestamp.from(now));
+               // userActivityRepository.save(userActivity);
             }
         }
 
         // Grant coin if total time spent >= 10 minutes
-        if (userActivity.getTotalTimeSpent() >= 10 && userActivity.getCoinsEarned() == 0) {
+        if (userActivity.getTotalTimeSpent() >= 2 && userActivity.getCoinsEarned() == 0) {
             userActivity.setCoinsEarned(1);
+            userActivityRepository.save(userActivity);
+            coinsService.addCoins( email, today); 
         }
-
+        else {
         // Save the updated user activity record
         userActivityRepository.save(userActivity);
+        }
     }
 }

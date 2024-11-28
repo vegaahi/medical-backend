@@ -1,8 +1,9 @@
+
 package com.medical.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.medical.entity.CoinsEntity;
+import com.medical.entity.Coins;
 import com.medical.entity.Customers;
 import com.medical.entity.Student;
 import com.medical.repository.CustomerRepository;

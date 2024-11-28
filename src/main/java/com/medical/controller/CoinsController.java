@@ -1,40 +1,41 @@
 package com.medical.controller;
 
-import com.medical.entity.CoinsEntity;
-import com.medical.entity.Customers;
-import com.medical.service.CoinsService;
-import com.medical.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.medical.service.CoinsService;
+import com.medical.entity.Coins;
+
+import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/api/coins")
+@RequestMapping("/coins")
 public class CoinsController {
-
 
     @Autowired
     private CoinsService coinsService;
 
-    @PostMapping("/update-time")
-    public Map<String, String> updateTimeSpent(@RequestParam Long userId, @RequestParam int timeSpent) {
-        coinsService.updateTotalTimeSpent(userId, timeSpent);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Time updated successfully.");
-        return response;
+    @PostMapping("/add")
+    public String addCoins(@RequestParam String email,@RequestParam String today) {
+        try {
+            LocalDate date = LocalDate.parse(today);
+            coinsService.addCoins(email, date);
+            return "Coin count updated successfully for " + email;
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
-    @GetMapping("/has-earned-coin")
-    public Map<String, Boolean> hasUserEarnedCoin(@RequestParam Long userId) {
-        boolean hasEarnedCoin = coinsService.hasUserEarnedCoin(userId);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("hasEarnedCoin", hasEarnedCoin);
-        return response;
+
+    // Endpoint to get the current coin count of a user
+    @GetMapping("/get/{email}")
+    public String getCoinCount(@PathVariable String email) {
+        // Use the service to get the coin count for the given email
+        Coins record = coinsService.getCoinsByEmail(email);
+        if (record != null) {
+            return "Coin count for " + email + ": " + record.getCoins();
+        } else {
+            return "No record found for " + email;
+        }
     }
 }

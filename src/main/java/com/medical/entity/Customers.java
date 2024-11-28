@@ -61,9 +61,10 @@ public abstract class Customers {
     @Column(name = "total_coupons")
     private int totalCoupons = 0;
 
-    @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<CoinsEntity> coins;
+    private List<Coins> coins;
+    
 
     @OneToMany(mappedBy = "customers", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
