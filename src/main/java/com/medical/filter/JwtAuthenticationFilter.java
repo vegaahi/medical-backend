@@ -38,6 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = null;
         String username = null;
+        String role = null;
 
         // Extract token from cookies
         if (request.getCookies() != null) {
@@ -53,6 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Extract username if token is present
             if (token != null) {
                 username = jwtUtil.extractUserName(token);
+                role = jwtUtil.extractRole(token);
             }
 
             // Authenticate the user if the username is extracted and not already authenticated
@@ -66,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     // Track user activity
-                    userActivityService.trackUserActivity(username, false);
+                    userActivityService.trackUserActivity(username, role,false);
 
                 }
             }

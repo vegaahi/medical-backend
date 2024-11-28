@@ -62,7 +62,7 @@ public class AuthController {
             refreshTokenCookie.setPath("/");
 
             if(role.equals("ROLE_CUSTOMER")){
-                userActivityService.trackUserActivity(username, true);
+                userActivityService.trackUserActivity(username,role, true);
 
             }
             // Add cookies to response

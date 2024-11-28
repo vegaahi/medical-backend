@@ -17,13 +17,17 @@ public class UserActivityService {
     private UserActivityRepository userActivityRepository;
 
     @Transactional
-    public void trackUserActivity(String email, boolean isLoginEvent) {
+    public void trackUserActivity(String email,String role, boolean isLoginEvent) {
+        if(role.equals("ROLE_ADMIN")){
+            return;
+        }
         LocalDate today = LocalDate.now();
         UserActivity userActivity = userActivityRepository.findByEmailAndLastLoginDate(email, today);
 
         Instant now = Instant.now();
 
-        if (userActivity == null) {
+
+        if (userActivity == null && role.equals("ROLE_CUSTOMER")) {
             // Initialize new record for today's activity
             userActivity = new UserActivity();
             userActivity.setEmail(email);
