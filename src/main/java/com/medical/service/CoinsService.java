@@ -35,7 +35,23 @@ public class CoinsService {
                 existingRecord.setCoins(0);
             } else {
                 // Else, increment the coin count by 1
-                existingRecord.setCoins(existingRecord.getCoins() + 1);
+                if(existingRecord.getCoins()<7) {
+                    existingRecord.setCoins(existingRecord.getCoins() + 1);
+                }
+                else{
+                    try{
+                        Customers customer = customerRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Chapter not found with email: " + email));
+                        customer.setTotalTokens(customer.getTotalTokens()+1);
+                     if (customerRepository.save(customer) != null) {
+                    existingRecord.setCoins(0);
+                            }
+                    }
+                    catch (Exception e) {
+                        System.out.println(e);
+                    }
+
+
+                }
             }
 
             // Update the last update date
