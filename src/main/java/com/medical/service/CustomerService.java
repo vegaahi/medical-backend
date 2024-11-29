@@ -60,4 +60,8 @@ public Student saveStudent(Student student) {
     public List<Customers> getAllCustomers() {
     return customersRepository.findAll();
 }
+
+    public Customers getCustomerByEmail(String email) {
+        return customersRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Chapter not found with email: " + email));
+    }
 }
