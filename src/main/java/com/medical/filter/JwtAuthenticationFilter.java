@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authToken);
 
                     // Track user activity
-                    userActivityService.trackUserActivity(username, role,false);
+//                    userActivityService.trackUserActivity(username, role,false);
 
                 }
             }
