@@ -27,8 +27,8 @@ public class Subscription {
     @Column(nullable = false)
     private LocalDate startDate;
 
-    @Column
-    private LocalDate endDate; // null for lifetime access
+    @Column(nullable = false)
+    private LocalDate endDate;
 
     @Column(nullable = false)
     private Double amount;
