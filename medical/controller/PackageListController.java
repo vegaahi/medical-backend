@@ -18,6 +18,7 @@ import com.medical.entity.PackageList;
 import com.medical.service.PackageListService;
 
 @RestController
+@CrossOrigin
 @RequestMapping()
 public class PackageListController {
 

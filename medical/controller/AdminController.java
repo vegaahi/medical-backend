@@ -11,7 +11,7 @@ import com.medical.entity.Admin;
 import com.medical.service.AdminService;
 
 @RestController
-
+@CrossOrigin
 @RequestMapping
 public class AdminController {
 

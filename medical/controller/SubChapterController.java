@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping()
 public class SubChapterController {
 

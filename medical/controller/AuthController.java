@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -47,27 +48,28 @@ public class AuthController {
             String accessToken = jwtUtil.generateToken(userDetails.getUsername(), role);
             String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
 
-            // Set access token in HTTP-only cookie
             Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
             accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(true); // Set true in production with HTTPS
-            accessTokenCookie.setMaxAge(15 * 60); // 15 minutes expiry
+            accessTokenCookie.setSecure(false); // Set true in production with HTTPS
+            accessTokenCookie.setMaxAge(60 * 60); // 1-hour expiry
+//            accessTokenCookie.setSameSite("None");
             accessTokenCookie.setPath("/");
 
-            // Set refresh token in HTTP-only cookie
             Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
             refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true); // Set true in production with HTTPS
+            refreshTokenCookie.setSecure(false); // Set true in production with HTTPS
             refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days expiry
+//            refreshTokenCookie.setSameSite("None");
             refreshTokenCookie.setPath("/");
+
+            response.addCookie(accessTokenCookie);
+            response.addCookie(refreshTokenCookie);
 
             if(role.equals("ROLE_CUSTOMER")){
                 userActivityService.trackUserActivity(username,role, true);
 
             }
-            // Add cookies to response
-            response.addCookie(accessTokenCookie);
-            response.addCookie(refreshTokenCookie);
+
 
 //            return ResponseEntity.ok("Login successful");
             return ResponseEntity.ok(accessToken);
@@ -109,8 +111,9 @@ public class AuthController {
             // Set the new access token in a cookie
             Cookie accessTokenCookie = new Cookie("accessToken", newAccessToken);
             accessTokenCookie.setHttpOnly(true);
-            accessTokenCookie.setSecure(true); // Use true in production with HTTPS
-            accessTokenCookie.setMaxAge(15 * 60); // 15 minutes expiry
+            accessTokenCookie.setSecure(false); // Use true in production with HTTPS
+            accessTokenCookie.setMaxAge(60 * 60); // 15 minutes expiry
+//            accessTokenCookie.setSameSite("None");
             accessTokenCookie.setPath("/");
 
             response.addCookie(accessTokenCookie);
@@ -127,14 +130,16 @@ public class AuthController {
         // Clear cookies
         Cookie accessTokenCookie = new Cookie("accessToken", null);
         accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true); // Use true in production with HTTPS
+        accessTokenCookie.setSecure(false); // Use true in production with HTTPS
         accessTokenCookie.setMaxAge(0); // Expire immediately
+//        accessTokenCookie.setSameSite("None");
         accessTokenCookie.setPath("/");
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", null);
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true); // Use true in production with HTTPS
+        refreshTokenCookie.setSecure(false); // Use true in production with HTTPS
         refreshTokenCookie.setMaxAge(0); // Expire immediately
+//        refreshTokenCookie.setSameSite("None");
         refreshTokenCookie.setPath("/");
 
         response.addCookie(accessTokenCookie);
