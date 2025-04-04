@@ -13,6 +13,7 @@ import com.medical.entity.Chapter;
 import com.medical.service.AdminService;
 import com.medical.service.ChapterService;
 @RestController
+@CrossOrigin
 @RequestMapping()
 public class ChapterController {
 

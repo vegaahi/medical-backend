@@ -9,6 +9,7 @@ import com.medical.entity.Coins;
 import java.time.LocalDate;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/coins")
 public class CoinsController {
 

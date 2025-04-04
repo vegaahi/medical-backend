@@ -19,11 +19,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableWebMvc
 public class SpringConfig {
 
     @Autowired
@@ -80,7 +82,7 @@ public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
     // Set allowed origins to your React frontend
-    configuration.setAllowedOrigins(List.of("http://localhost:5000","http://124.123.120.85:5000")); // Specify the frontend origin
+    configuration.setAllowedOrigins(List.of("http://localhost:5000","http://124.123.120.85:5000","http://localhost:80", "http://62.72.29.190/","http://62.72.29.190","http://192.168.31.173:5000/","http://62.72.29.190:80","http://www.haelanhomeopathy.com")); // Specify the frontend origin
 
     // Set allowed methods (e.g., GET, POST, etc.)
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));

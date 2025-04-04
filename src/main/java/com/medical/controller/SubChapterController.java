@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @RestController
@@ -50,7 +51,6 @@ public class SubChapterController {
 
         return ResponseEntity.ok("SubChapter created successfully");
     }
-
     @PostMapping("/admins/subchapter/image")
     public ResponseEntity<String> uploadSubChapterWithImage(
             @RequestParam("chapterId") Long chapterId,
@@ -64,45 +64,46 @@ public class SubChapterController {
                 .orElseThrow(() -> new RuntimeException("Chapter not found with id: " + chapterId));
 
         // Validate content type
-        if (contentType == ContentType.IMAGE) {
-            try {
-                // Extract file extension
-                String originalFileName = file.getOriginalFilename();
-                String extension = "";
-                if (originalFileName != null && originalFileName.contains(".")) {
-                    extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-                }
-
-                // Count existing images for this chapter and subchapter
-                int imageCount = subChapterService.countImagesForSubChapter(chapterId, subchapterNumber) + 1;
-
-                // Construct new file name as Image_{chapterNumber}_{subchapterNumber}_{imageCount}.{extension}
-                String newFileName = "Image_" + chapter.getChapterNumber() + "_" + subchapterNumber + "_" + imageCount + extension;
-
-                // Save the file in the upload directory with the new file name
-                Path filePath = Paths.get(uploadDir + File.separator + newFileName);
-                Files.write(filePath, file.getBytes());
-
-                // Create a SubChapter and save the new file name in the "content" field
-                SubChapter subChapter = new SubChapter();
-                subChapter.setSubchapterNumber(subchapterNumber);
-                subChapter.setContent(newFileName); // Saving the new file name
-                subChapter.setContentType(contentType);
-                subChapter.setSubchapterTitle(subchapterTitle);
-                subChapter.setChapter(chapter); // Set the chapter reference
-
-                // Save SubChapter to the database
-                subChapterService.saveSubChapter(subChapter);
-
-                return ResponseEntity.ok("Image uploaded and subchapter saved.");
-            } catch (IOException e) {
-                return ResponseEntity.status(500).body("Error while saving image.");
-            }
-        } else {
+        if (contentType != ContentType.IMAGE) {
             return ResponseEntity.badRequest().body("ContentType must be IMAGE for file upload.");
         }
-    }
 
+        try {
+            // Ensure the upload directory exists
+            Path uploadPath = Paths.get(uploadDir);
+            Files.createDirectories(uploadPath);  // Create if not exists
+
+            // Extract file extension
+            String originalFileName = file.getOriginalFilename();
+            String extension = (originalFileName != null && originalFileName.contains("."))
+                    ? originalFileName.substring(originalFileName.lastIndexOf("."))
+                    : "";
+
+            // Count existing images for this chapter and subchapter
+            int imageCount = subChapterService.countImagesForSubChapter(chapterId, subchapterNumber) + 1;
+
+            // Construct new file name as Image_{chapterNumber}_{subchapterNumber}_{imageCount}.{extension}
+            String newFileName = "Image_" + chapter.getChapterNumber() + "_" + subchapterNumber + "_" + imageCount + extension;
+
+            // Define file path and save the file
+            Path filePath = uploadPath.resolve(newFileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Save subchapter details in the database
+            SubChapter subChapter = new SubChapter();
+            subChapter.setSubchapterNumber(subchapterNumber);
+            subChapter.setContent(newFileName);  // Store only file name, not full path
+            subChapter.setContentType(contentType);
+            subChapter.setSubchapterTitle(subchapterTitle);
+            subChapter.setChapter(chapter);
+
+            subChapterService.saveSubChapter(subChapter);
+
+            return ResponseEntity.ok("Image uploaded and subchapter saved successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Error while saving image.");
+        }
+    }
 
     // Update an existing subchapter (Text)
     @PutMapping("/admins/subchapter/{contentType}/{cid}/{subChapterId}")
